@@ -6,7 +6,7 @@ public class Player : MonoBehaviour
     private CharacterController controller;
     [SerializeField] private LayerMask aimMask;
     private Vector2 moveInput;
-    private Vector2 moveSpeed;
+    private float moveSpeed = 15f;
     private Vector3 movementVector;
     private float gravity = 9.81f;
     private float verticalVelocity = -0.5f;
@@ -21,8 +21,8 @@ public class Player : MonoBehaviour
         controls.Character.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
         controls.Character.Move.canceled += ctx => moveInput = Vector2.zero;
 
-        controls.Character.Aim.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
-        controls.Character.Aim.canceled += ctx => moveInput = Vector2.zero;
+        controls.Character.Aim.performed += ctx => aimInput = ctx.ReadValue<Vector2>();
+        controls.Character.Aim.canceled += ctx => aimInput = Vector2.zero;
     }
 
     void Start()
