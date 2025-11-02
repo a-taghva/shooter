@@ -4,16 +4,16 @@ public class Player : MonoBehaviour
 {
     private PlayerControls controls;
     private CharacterController controller;
+    private Animator animator;
     [SerializeField] private LayerMask aimMask;
     private Vector2 moveInput;
-    private float moveSpeed = 15f;
+    private float moveSpeed = 5f;
     private Vector3 movementVector;
     private float gravity = 9.81f;
     private float verticalVelocity = -0.5f;
     private Vector3 lookingDirection;
 
     private Vector2 aimInput;
-
     void Awake()
     {
         controls = new PlayerControls();
@@ -28,6 +28,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         controller = GetComponent<CharacterController>();
+        animator = GetComponentInChildren<Animator>();
     }
 
     // Update is called once per frame
@@ -41,6 +42,7 @@ public class Player : MonoBehaviour
     {
         movementVector = new Vector3(moveInput.x, 0, moveInput.y);
         applyGravity();
+        AnimatorController();
 
         if (movementVector.magnitude > 0)
         {
@@ -74,6 +76,15 @@ public class Player : MonoBehaviour
 
             transform.forward = lookingDirection;
         }
+    }
+    
+    private void AnimatorController()
+    {
+        float xVelocity = Vector3.Dot(movementVector.normalized, transform.right);
+        float zVelocity = Vector3.Dot(movementVector.normalized, transform.forward);
+
+        animator.SetFloat("xVelocity", xVelocity);
+        animator.SetFloat("zVelocity", zVelocity);
     }
 
     void OnEnable()
