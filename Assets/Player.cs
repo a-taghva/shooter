@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -14,6 +15,7 @@ public class Player : MonoBehaviour
     private Vector3 lookingDirection;
 
     private Vector2 aimInput;
+    private Boolean isRunning;
     void Awake()
     {
         controls = new PlayerControls();
@@ -23,6 +25,9 @@ public class Player : MonoBehaviour
 
         controls.Character.Aim.performed += ctx => aimInput = ctx.ReadValue<Vector2>();
         controls.Character.Aim.canceled += ctx => aimInput = Vector2.zero;
+
+        controls.Character.Run.performed += ctx => isRunning = true;
+        controls.Character.Run.canceled += ctx => isRunning = false;
     }
 
     void Start()
@@ -46,6 +51,14 @@ public class Player : MonoBehaviour
 
         if (movementVector.magnitude > 0)
         {
+            if (isRunning)
+            {
+                moveSpeed = 10f;
+            }
+            else
+            {
+                moveSpeed = 5f;
+            }
             controller.Move(movementVector * Time.deltaTime * moveSpeed);
         }
     }
@@ -84,7 +97,9 @@ public class Player : MonoBehaviour
         float zVelocity = Vector3.Dot(movementVector.normalized, transform.forward);
 
         animator.SetFloat("xVelocity", xVelocity , 0.1f , Time.deltaTime);
-        animator.SetFloat("zVelocity", zVelocity , 0.1f , Time.deltaTime);
+        animator.SetFloat("zVelocity", zVelocity, 0.1f, Time.deltaTime);
+
+        animator.SetBool("isRunning", isRunning);
     }
 
     void OnEnable()
