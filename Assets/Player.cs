@@ -28,6 +28,8 @@ public class Player : MonoBehaviour
 
         controls.Character.Run.performed += ctx => isRunning = true;
         controls.Character.Run.canceled += ctx => isRunning = false;
+
+        controls.Character.Shoot.performed += ctx => shoot();
     }
 
     void Start()
@@ -90,7 +92,11 @@ public class Player : MonoBehaviour
             transform.forward = lookingDirection;
         }
     }
-    
+    void shoot()
+    {
+        animator.SetTrigger("Fire");
+    }
+
     private void AnimatorController()
     {
         float xVelocity = Vector3.Dot(movementVector.normalized, transform.right);
